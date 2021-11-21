@@ -1,5 +1,6 @@
 import express from "express";
 import Status from "../class/Status.js";
+import Token from "../class/Token.js";
 
 import { login } from "./controllers/login.js";
 import { register } from './controllers/register.js';
@@ -24,3 +25,4 @@ router.post('/register', register);
 
 export default router;
 export const status = new Status();
+export const token = new Token();

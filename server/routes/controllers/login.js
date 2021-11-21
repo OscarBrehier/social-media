@@ -1,38 +1,47 @@
 import User from "../../model/User.js";
 import compare from "../../util/compare.js";
-import { status } from "../router.js";
+import {status} from "../router.js";
+import {token} from "../router.js";
 
 export const login = async (req, res) => {
 
-    const data = req.body;
-    if(!data.email && !data.password || !data.email || !data.password) return status.badRequest(res);
+    token.check(req, res).then(result => {
 
-    if(req.headers.token !== '123' || !req.headers.token) return status.unauthorized(res);
+        if(result === true) {
 
-    User.findOne({
+            const data = req.body;
+            if(!data.email && !data.password || !data.email || !data.password) return status.badRequest(res);
 
-        email: data.email
+            if(req.headers.token !== '123' || !req.headers.token) return status.unauthorized(res);
 
-    }, (err, user) => {
+            User.findOne({
 
-        if(err) throw err;
+                email: data.email
 
-        if(!user) return res.json({
-            message: 'User not found',
-            status: 404
-        });
+            }, (err, user) => {
 
-        let checkCredentials = compare(data.password, user.password);
-        checkCredentials.then(function(result) {
+                if(err) throw err;
 
-            if(result === false) {
+                if(!user) return res.json({
+                    message: 'User not found',
+                    status: 404
+                });
 
-                return status.badRequest(res, 'Invalid credentials');
+                let checkCredentials = compare(data.password, user.password);
+                checkCredentials.then(function(result) {
 
-            } else { status.ok(res) }
+                    if(result === false) {
 
-        })
+                        return status.badRequest(res, 'Invalid credentials');
 
-    })
+                    } else { status.ok(res) }
+
+                });
+
+            });
+
+        }
+
+    });
 
 }
