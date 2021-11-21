@@ -18,7 +18,8 @@
     "express": "^4.17.1",
     "json-templates": "^4.2.0",
     "mongoose": "^6.0.13",
-    "pq": "^0.0.3"
+    "pq": "^0.0.3",
+    "uniqid": "^5.4.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.15"

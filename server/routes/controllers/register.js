@@ -1,5 +1,6 @@
 import User from "../../model/User.js";
 import hash from "../../util/hash.js";
+import { status } from "../router.js";
 
 export const register = async (req, res) => {
 
@@ -7,12 +8,14 @@ export const register = async (req, res) => {
     const dataLength = Object.keys(data).length;
 
     if(dataLength === 0) return res.sendStatus(400);
-    if(!data.firstName || !data.lastName || !data.userName || !data.password || !data.email) return res.send('Bad template');
+    if(!data.firstName || !data.lastName || !data.password || !data.email) return status.badRequest(res);
 
     const hashedPassword = await hash(data.password);
 
     User.findOne({
-        userName: data.userName
+
+        email: data.email
+
     }, async (err, user) => {
 
         if(err) throw err;
@@ -22,7 +25,7 @@ export const register = async (req, res) => {
             const newUser = await new User({
                 firstName: data.firstName,
                 lastName: data.lastName,
-                userName: data.userName,
+                userName: null,
                 password: hashedPassword,
                 email: data.email
             });
@@ -31,13 +34,11 @@ export const register = async (req, res) => {
                 .then(res => console.log(res))
                 .catch(e => console.log(e));
 
-            return res.sendStatus(201);
+            return status.created(res);
 
         }
 
-        res.json({
-            message: "User already exists"
-        });
+        status.forbidden(res, 'User with this email already exists');
 
     })
 

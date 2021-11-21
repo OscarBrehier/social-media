@@ -27,6 +27,12 @@ class Server {
 
     }
 
+    token(req) {
+
+        
+
+    }
+
 }
 
 export default Server;
