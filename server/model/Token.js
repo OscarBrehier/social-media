@@ -4,7 +4,8 @@ const tokenSchema = new mongoose.Schema({
 
     token: String,
     id: String,
-    author: String
+    author: String,
+    permissions: String
 
 });
 

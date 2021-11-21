@@ -5,5 +5,8 @@ import router from "./routes/router.js";
 import { username, password } from "./config.js";
 
 console.clear();
-new Server( '4000', router).start();
+const client = new Server( '4000', router);
 new Database(username, password).start();
+
+client.start();
+export default client;

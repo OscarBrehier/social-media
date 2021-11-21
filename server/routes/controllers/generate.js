@@ -6,7 +6,8 @@ import {status} from "../router.js";
 export const generate = async (req, res) => {
 
     const id = uniqid();
-    const name = req.params.author;
+    const name = req.body.author;
+    const permissions = req.body.permissions;
 
     if(!name) return status.badRequest(res, 'Missing token author');
 
@@ -24,7 +25,8 @@ export const generate = async (req, res) => {
 
                     token: token,
                     id: id,
-                    author: name
+                    author: name,
+                    permissions: permissions
 
                 });
 
