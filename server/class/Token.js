@@ -1,64 +1,61 @@
-import TokenSchema from "../model/Token.js";
+import User from "../model/User.js";
 import {status} from "../routes/router.js";
+import uniqid from 'uniqid';
+import hash from "../util/hash.js";
 
 class Token {
 
     constructor() {}
 
-    async check(req, res) {
+    async generate(name) {
 
-        try {
+        const id = uniqid();
+        const token = await hash(`${id}${name}`);
 
-            const token = req.headers.authorization;
-            const author = req.headers.author;
-
-            if(!token || !author) {
-
-                status.unauthorized(res);
-                return false;
-
-            }
-
-            const user = await TokenSchema.findOne({ author: author }).catch(err => console.error(err));
-
-            if(!user) {
-
-                status.notFound(res, 'No user with the given username');
-                return false;
-
-            } else if(user.token !== token) {
-
-                status.forbidden(res, 'Tokens do not match');
-                return false;
-
-            } else {
-
-                return true;
-
-            }
-
-        } catch(err) { console.error(err); }
+        return { token, id };
 
     }
 
-    async permissions(req, res, permission) {
+    async check(req, res) {
 
-        try {
+        const token = req.headers.authorization;
+        const author = req.headers.author;
 
-            const author = req.headers.author;
+        if(!token && !author || !token || !author) {
 
-            const user = await TokenSchema.findOne({ author: author }).catch(err => console.log(err));
+            status.unauthorized(res);
+            return false;
 
-            if(user.permissions !== permission) {
+        }
 
-                status.forbidden(res, 'Missing permissions');
-                return false;
+        const user = await User.findOne({ userName: author }).catch(err => console.error(err));
 
-            }
+        if(!user) {
 
-            return true;
+            status.notFound(res, 'A user with the given username does not exists.');
+            return false;
 
-        } catch(err) { console.error(err); }
+        }
+
+        if(token !== user.token) {
+
+            status.forbidden(res, 'Tokens do not match.');
+            return false;
+
+        }
+
+        return true;
+
+    }
+
+    async validate(req, res) {
+
+        const token = req.body.token;
+
+        const user = await User.findOne({ token: token }).catch(err => console.log(err));
+
+        if(!user) return false;
+        return true;
 
     }
 

@@ -5,50 +5,47 @@ import {token} from "../router.js";
 
 export const register = async (req, res) => {
 
-    token.check(req, res).then(async function(result) {
+    const data = req.body;
+    const dataLength = Object.keys(data).length;
 
-        if(result === true) {
+    if(dataLength === 0) return res.sendStatus(400);
+    if(!data.firstName || !data.lastName || !data.username || !data.password || !data.email) return status.badRequest(res);
 
-            const data = req.body;
-            const dataLength = Object.keys(data).length;
+    const hashedPassword = await hash(data.password);
+    const generate = await token.generate(data.username);
 
-            if(dataLength === 0) return res.sendStatus(400);
-            if(!data.firstName || !data.lastName || !data.password || !data.email) return status.badRequest(res);
+    User.findOne({
 
-            const hashedPassword = await hash(data.password);
+        email: data.email
 
-            User.findOne({
+    }, async (err, user) => {
 
-                email: data.email
+        if(err) throw err;
 
-            }, async (err, user) => {
+        if(!user) {
 
-                if(err) throw err;
+            const newUser = await new User({
 
-                if(!user) {
-
-                    const newUser = await new User({
-                        firstName: data.firstName,
-                        lastName: data.lastName,
-                        userName: null,
-                        password: hashedPassword,
-                        email: data.email
-                    });
-
-                    newUser.save()
-                        .then(res => console.log(res))
-                        .catch(e => console.log(e));
-
-                    return status.created(res);
-
-                }
-
-                status.forbidden(res, 'User with this email already exists');
+                firstName: data.firstName,
+                lastName: data.lastName,
+                userName: data.username,
+                password: hashedPassword,
+                email: data.email,
+                token: generate.token,
+                id: generate.id
 
             });
 
+            newUser.save()
+                .then(res => console.log(res))
+                .catch(e => console.log(e));
+
+            return status.created(res);
+
         }
 
-    })
+        status.forbidden(res, 'User with this email already exists');
+
+    });
 
 }

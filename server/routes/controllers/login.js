@@ -5,42 +5,40 @@ import {token} from "../router.js";
 
 export const login = async (req, res) => {
 
-    token.check(req, res).then(result => {
+    const data = req.body;
+    if(!data.email && !data.password || !data.email || !data.password) return status.badRequest(res);
 
-        if(result === true) {
+    User.findOne({
 
-            const data = req.body;
-            if(!data.email && !data.password || !data.email || !data.password) return status.badRequest(res);
+        email: data.email
 
-            if(req.headers.token !== '123' || !req.headers.token) return status.unauthorized(res);
+    }, (err, user) => {
 
-            User.findOne({
+        if(err) throw err;
 
-                email: data.email
+        if(!user) return res.json({
+            message: 'User not found',
+            status: 404
+        });
 
-            }, (err, user) => {
+        let checkCredentials = compare(data.password, user.password);
+        checkCredentials.then(function(result) {
 
-                if(err) throw err;
+            if(result === false) {
 
-                if(!user) return res.json({
-                    message: 'User not found',
-                    status: 404
+                return status.badRequest(res, 'Invalid credentials');
+
+            } else {
+
+                res.status(200).json({
+                    message: 'OK',
+                    token: user.token,
+                    status: 200
                 });
 
-                let checkCredentials = compare(data.password, user.password);
-                checkCredentials.then(function(result) {
+            }
 
-                    if(result === false) {
-
-                        return status.badRequest(res, 'Invalid credentials');
-
-                    } else { status.ok(res) }
-
-                });
-
-            });
-
-        }
+        });
 
     });
 

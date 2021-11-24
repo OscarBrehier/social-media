@@ -1,11 +1,36 @@
-export default function App() {
+import {BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import RequireAuth from "./components/RequireAuth";
 
-  return (
+import { Home, Login, Register, Dashboard } from './pages/pages';
 
-      <div>
+function App() {
 
-      </div>
+    return (
 
-  )
+        <Router>
+            <div className="App">
+                <Routes>
+
+                    <Route exact path='/' element={<Home/>}/>
+                    <Route exact path='/login' element={<Login/>}/>
+                    <Route exact path='/register' element={<Register/>}/>
+                    <Route
+                        exact
+                        path='/dashboard'
+                        element={
+                            <RequireAuth>
+                                <Dashboard/>
+                            </RequireAuth>
+                        }
+                    />
+                    <Route path='*' element={<div>404 - NOT FOUND</div>}/>
+
+                </Routes>
+            </div>
+        </Router>
+
+    );
 
 }
+
+export default App;
