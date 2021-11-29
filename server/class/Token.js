@@ -52,7 +52,7 @@ class Token {
 
         const token = req.body.token;
 
-        const user = await User.findOne({ token: token }).catch(err => console.log(err));
+        const user = await User.findOne({ Token: token }).catch(err => console.log(err));
 
         if(!user) return false;
         return true;

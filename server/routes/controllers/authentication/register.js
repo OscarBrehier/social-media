@@ -1,7 +1,7 @@
-import User from "../../model/User.js";
-import hash from "../../util/hash.js";
-import { status } from "../router.js";
-import {token} from "../router.js";
+import User from "../../../model/User.js";
+import hash from "../../../util/hash.js";
+import { status } from "../../router.js";
+import {token} from "../../router.js";
 
 export const register = async (req, res) => {
 
@@ -26,18 +26,20 @@ export const register = async (req, res) => {
 
             const newUser = await new User({
 
-                firstName: data.firstName,
-                lastName: data.lastName,
-                userName: data.username,
-                password: hashedPassword,
-                email: data.email,
-                token: generate.token,
-                id: generate.id
+                FirstName: data.firstName,
+                LastName: data.lastName,
+                Username: data.username,
+                Email: data.email,
+                JoinedOn: new Date(),
+                Password: hashedPassword,
+                Token: generate.token,
+                ID: generate.id,
+                EmailVerified: false,
+                VerificationCode: null
 
             });
 
             newUser.save()
-                .then(res => console.log(res))
                 .catch(e => console.log(e));
 
             return status.created(res);

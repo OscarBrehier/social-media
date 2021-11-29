@@ -1,4 +1,4 @@
-import { base } from "./endpoints";
+import { base } from "../endpoints";
 
 export const register = async (firstName, lastName, username, email, password) => {
 

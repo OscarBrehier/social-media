@@ -1,9 +1,9 @@
-import {base} from "./endpoints";
+import {base} from "../endpoints";
 
-export const validate = async (token) => {
+export const validate = async () => {
 
     const data = {
-        token: token
+        token: localStorage.getItem('user')
     };
 
     const request = await fetch(`${base}/validate`, {

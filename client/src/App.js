@@ -1,9 +1,11 @@
 import {BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import RequireAuth from "./components/RequireAuth";
 
-import { Home, Login, Register, Dashboard } from './pages/pages';
+import { Home, Login, Register, Dashboard, Verify } from './pages/pages';
 
 function App() {
+
+    const data = true;
 
     return (
 
@@ -20,6 +22,15 @@ function App() {
                         element={
                             <RequireAuth>
                                 <Dashboard/>
+                            </RequireAuth>
+                        }
+                    />
+                    <Route
+                        exact
+                        path='/verify'
+                        element={
+                            <RequireAuth email={data}>
+                                    <Verify/>
                             </RequireAuth>
                         }
                     />

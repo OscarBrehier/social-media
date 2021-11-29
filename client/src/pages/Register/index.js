@@ -1,6 +1,6 @@
 import {useState} from "react";
 import {useNavigate} from "react-router-dom";
-import {register} from "../../api/register";
+import {register} from "../../api/paths";
 
 const Register = () => {
 

@@ -1,5 +1,5 @@
 import {useState} from "react";
-import {login} from "../../api/login";
+import {login} from "../../api/paths";
 import {Navigate, useNavigate} from "react-router-dom";
 import { useEffect} from "react";
 

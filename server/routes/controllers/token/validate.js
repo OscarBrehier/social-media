@@ -1,4 +1,4 @@
-import {token, status} from "../router.js";
+import {token, status} from "../../router.js";
 
 export const validate = async (req, res) => {
 

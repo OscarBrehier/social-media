@@ -1,4 +1,4 @@
-import { base } from "./endpoints";
+import { base } from "../endpoints";
 
 export const login = async (email, password) => {
 
@@ -18,6 +18,7 @@ export const login = async (email, password) => {
     const response = await request.json();
 
     if(response.status === 200) return { response: true, token: response.token };
+    console.log(response.token);
     return { response: false };
 
 }

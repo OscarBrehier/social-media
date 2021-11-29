@@ -1,11 +1,13 @@
-import {token, status} from "../router.js";
+import {status, users} from "../router.js";
 
 export const production = async (req, res) => {
 
-    token.check(req, res).then(result => {
+     const user = req.headers.email;
+     if(!user) status.badRequest(res, 'Email not provided');
 
-        if(result === true) status.ok(res);
+     const code = await users.generateVerificationCode(user);
 
-    })
+     if(code.state === false) status.notFound(res);
+     status.ok(res, code.code);
 
 }

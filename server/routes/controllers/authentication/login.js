@@ -1,7 +1,7 @@
-import User from "../../model/User.js";
-import compare from "../../util/compare.js";
-import {status} from "../router.js";
-import {token} from "../router.js";
+import User from "../../../model/User.js";
+import compare from "../../../util/compare.js";
+import {status} from "../../router.js";
+import {token} from "../../router.js";
 
 export const login = async (req, res) => {
 
@@ -10,7 +10,7 @@ export const login = async (req, res) => {
 
     User.findOne({
 
-        email: data.email
+        Email: data.email
 
     }, (err, user) => {
 
@@ -21,7 +21,7 @@ export const login = async (req, res) => {
             status: 404
         });
 
-        let checkCredentials = compare(data.password, user.password);
+        let checkCredentials = compare(data.password, user.Password);
         checkCredentials.then(function(result) {
 
             if(result === false) {
@@ -32,7 +32,7 @@ export const login = async (req, res) => {
 
                 res.status(200).json({
                     message: 'OK',
-                    token: user.token,
+                    token: user.Token,
                     status: 200
                 });
 

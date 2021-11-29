@@ -1,41 +1,24 @@
 import {Link} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
+import {useState} from "react";
 
 const Home = () => {
 
-    const setLocalItem = () => {
+    const [redirect, setRedirect] = useState('Login')
+    const [path, setPath] = useState('/login');
 
-        localStorage.setItem('user', '$2a$10$aeGB15rtMCvfBn.EbC9UX.ks4FbLIqPG1r2tl.kbfBj.a8Ht7klse');
+    const navigate = useNavigate();
 
-    }
-
-    const readLocalItem = () => {
-
-        let user = localStorage.getItem('user');
-        console.log(user);
-
-    }
-
-    const setCookie = () => {
-
-
-    }
+    const handleClick = () => {
+        return navigate(path);
+    };
 
     return (
 
         <div>
             Home
             <br/>
-            <Link to='/login'>Log In</Link>
-            <br/>
-            <button onClick={setLocalItem}>
-                set local item
-            </button>
-            <button onClick={readLocalItem}>
-                read local item
-            </button>
-            <button onClick={setCookie}>
-                set cookie
-            </button>
+            <button onClick={handleClick}>{ redirect }</button>
         </div>
 
     );
